@@ -206,6 +206,10 @@ RECOMMENDATION:
 # GEMINI API
 # ==========================================
 
+# ==========================================
+# GEMINI API
+# ==========================================
+
 def call_gemini(prompt):
 
     api_key = os.getenv("GEMINI_API_KEY")
@@ -222,8 +226,8 @@ def call_gemini(prompt):
         api_key=api_key
     )
 
-    # Models list with fallback to prevent 404 / outage errors
-    candidate_models = ["gemini-2.5-flash", "gemini-1.5-flash"]
+    # Valid and supported model endpoints
+    candidate_models = ["gemini-2.5-flash", "gemini-2.0-flash"]
     last_error = None
 
     for model_name in candidate_models:
@@ -247,8 +251,6 @@ def call_gemini(prompt):
         "text": None,
         "error": f"Gemini request failed: {last_error}"
     }
-
-
 # ==========================================
 # GEMINI JSON PARSER
 # ==========================================
