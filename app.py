@@ -1,5 +1,6 @@
 import os
 import json
+import time
 
 import streamlit as st
 from google import genai
@@ -225,29 +226,52 @@ def call_gemini(prompt):
     # Valid and supported model endpoints (updated Sept 2026)
     candidate_models = [
         "gemini-3.6-flash",
-        "gemini-flash-latest",
-        "gemini-2.5-flash"
+        "gemini-flash-latest"
     ]
+
+    # How many times to retry a model if it returns a
+    # temporary "high demand" (503) error, and how long
+    # to wait between attempts (seconds).
+    max_retries_per_model = 2
+    retry_delay_seconds = 3
 
     all_errors = []
 
     for model_name in candidate_models:
-        try:
-            response = client.models.generate_content(
-                model=model_name,
-                contents=prompt
-            )
+        for attempt in range(max_retries_per_model + 1):
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
 
-            return {
-                "success": True,
-                "text": response.text,
-                "error": None
-            }
-        except Exception as e:
-            all_errors.append(
-                f"[{model_name}] {str(e)}"
-            )
-            continue
+                return {
+                    "success": True,
+                    "text": response.text,
+                    "error": None
+                }
+            except Exception as e:
+                error_text = str(e)
+                all_errors.append(
+                    f"[{model_name}, attempt {attempt + 1}] "
+                    f"{error_text}"
+                )
+
+                is_temporary_overload = (
+                    "503" in error_text
+                    or "UNAVAILABLE" in error_text
+                )
+
+                if (
+                    is_temporary_overload
+                    and attempt < max_retries_per_model
+                ):
+                    time.sleep(retry_delay_seconds)
+                    continue
+
+                # Non-retryable error, or retries exhausted:
+                # move on to the next candidate model.
+                break
 
     combined_error = " | ".join(all_errors)
 
