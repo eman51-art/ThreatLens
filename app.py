@@ -208,41 +208,45 @@ RECOMMENDATION:
 
 def call_gemini(prompt):
 
-    try:
+    api_key = os.getenv("GEMINI_API_KEY")
 
-        api_key = os.getenv("GEMINI_API_KEY")
-
-        if not api_key:
-
-            return {
-                "success": False,
-                "text": None,
-                "error": "Gemini API key is missing."
-            }
-
-        client = genai.Client(
-            api_key=api_key
-        )
-
-        # Fixed model: gemini-2.0-flash is free and stable
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
-        )
-
-        return {
-            "success": True,
-            "text": response.text,
-            "error": None
-        }
-
-    except Exception as e:
+    if not api_key:
 
         return {
             "success": False,
             "text": None,
-            "error": f"Gemini request failed: {str(e)}"
+            "error": "Gemini API key is missing."
         }
+
+    client = genai.Client(
+        api_key=api_key
+    )
+
+    # Models list with fallback to prevent 404 / outage errors
+    candidate_models = ["gemini-2.5-flash", "gemini-1.5-flash"]
+    last_error = None
+
+    for model_name in candidate_models:
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt
+            )
+
+            return {
+                "success": True,
+                "text": response.text,
+                "error": None
+            }
+        except Exception as e:
+            last_error = str(e)
+            continue
+
+    return {
+        "success": False,
+        "text": None,
+        "error": f"Gemini request failed: {last_error}"
+    }
 
 
 # ==========================================
