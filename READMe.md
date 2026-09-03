@@ -1,44 +1,45 @@
-🛡️ ThreatLens
+# 🛡️ ThreatLens
 
-ThreatLens is a simple threat intelligence web app. You give it an IP address, a domain, or a URL, and it tells you whether the target looks Safe, Suspicious, Malicious, or Unknown — with a clear explanation.
+**ThreatLens** is a simple, intuitive threat intelligence web app. You give it an IP address, a domain, or a URL, and it tells you whether the target looks **Safe**, **Suspicious**, **Malicious**, or **Unknown** — along with a clear, tailored explanation.
 
-It combines real security data (VirusTotal + WHOIS) with an AI model (Google Gemini) that reads that data and explains it in plain language.
+It combines real-time security data from **VirusTotal** and **WHOIS** with **Google Gemini AI**, which analyzes the raw indicators and translates them into plain language.
 
-What it does
-You enter a target (IP, domain, or URL) and pick your knowledge level (Beginner, Intermediate, Expert).
-The app collects data from:
-VirusTotal – checks if security vendors flag the target as malicious.
-WHOIS – checks domain registration details (who owns it, how old it is).
-This data is sent to Gemini AI, which studies it and returns:
-A verdict (Safe / Suspicious / Malicious / Unknown)
-A risk score (0–100)
-A short summary
-Key findings
-A practical recommendation
-Everything is shown in a clean, easy-to-read report.
-The AI is instructed to only use the real data provided — it does not guess or make up facts, and it never claims something is "100% safe."
+---
 
-Tech Stack
-Streamlit – web app interface
-VirusTotal API – malware/reputation data
-python-whois – domain registration data
-Google Gemini API – AI-generated analysis
-Python-dotenv – manage API keys locally
+## 🎯 What It Does
 
+1. **Enter a Target**: Input any IP address, domain name, or full URL.
+2. **Select Knowledge Level**: Choose between **Beginner**, **Intermediate**, or **Expert** to get an explanation tailored to your technical understanding.
+3. **Automated Data Collection**:
+   * 🦠 **VirusTotal**: Checks if major security vendors flag the target as malicious.
+   * 📋 **WHOIS**: Retrieves domain registration details (e.g., owner information, creation date, age).
+4. **AI-Powered Assessment**:
+   * Data is passed to Google Gemini AI to generate a structured evaluation containing:
+     * 🏷️ **Verdict** (*Safe*, *Suspicious*, *Malicious*, or *Unknown*)
+     * 📊 **Risk Score** (0–100)
+     * 📝 **Short Summary**
+     * 🔍 **Key Findings**
+     * 💡 **Practical Recommendation**
 
-Project Files
+> **Note on AI Behavior:** The AI is strictly instructed to rely *only* on provided data — it never invents facts, avoids false assurances, and never claims a target is "100% safe."
 
-├── app.py             # Main Streamlit app (UI + Gemini logic)
-├── sources.py         # Fetches data from VirusTotal and WHOIS
-├── requirements.txt   # Python dependencies
-└── README.md          # This file
+---
 
+## 💻 Tech Stack
 
-Notes & Limitations
-WHOIS lookups only work for domains and URLs, not raw IP addresses.
-VirusTotal's free tier has a rate limit (about 4 requests per minute).
-Results are based only on available data — a "Safe" verdict means no bad signs were found, not a guarantee of full safety.
-Data (VirusTotal and WHOIS) is cached temporarily to save API calls and speed up repeated checks.
-Disclaimer
+* **Streamlit** – Clean, interactive web UI
+* **VirusTotal API** – Threat reputation and detection engine data
+* **python-whois** – Domain registration and lookup data
+* **Google Gemini API** – Intelligence analysis and natural language reporting
+* **Python-dotenv** – Local environment variable management
 
-ThreatLens is a learning/demo project for threat intelligence analysis. It is not a replacement for professional cybersecurity tools or advice. Always use your own judgment before trusting any link, domain, or IP address.
+---
+
+## 📂 Project Structure
+
+```text
+ThreatLens/
+├── app.py              # Main Streamlit app (UI & Gemini logic)
+├── sources.py          # Data fetchers (VirusTotal API & WHOIS logic)
+├── requirements.txt    # Python dependencies
+└── README.md           # Project documentation
