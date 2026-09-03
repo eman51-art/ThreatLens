@@ -3,7 +3,7 @@ import re
 import ipaddress
 from urllib.parse import urlparse
 import base64
-
+import streamlit as st
 import requests
 import whois
 
@@ -70,6 +70,7 @@ def validate_target(target, target_type):
 # VIRUSTOTAL
 # ==========================================
 
+@st.cache_data(ttl=1800)  # cache for 30 minutes
 def get_virustotal(target, target_type):
 
     try:
@@ -181,6 +182,7 @@ def get_virustotal(target, target_type):
 # WHOIS
 # ==========================================
 
+@st.cache_data(ttl=86400)  # cache for 24 hours (WHOIS rarely changes)
 def get_whois(target, target_type):
 
     try:
@@ -218,7 +220,7 @@ def get_whois(target, target_type):
             }
 
         data = {
-            "domain": target,
+            "domain": lookup_target,
             "registrar": domain_info.registrar,
             "creation_date": str(
                 domain_info.creation_date
