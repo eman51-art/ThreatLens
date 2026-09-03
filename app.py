@@ -224,8 +224,9 @@ def call_gemini(prompt):
             api_key=api_key
         )
 
+        # Fixed model: gemini-2.0-flash is free and stable
         response = client.models.generate_content(
-            model="gemini-3.6-flash",
+            model="gemini-2.0-flash",
             contents=prompt
         )
 
