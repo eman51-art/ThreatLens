@@ -185,19 +185,28 @@ def get_whois(target, target_type):
 
     try:
 
-        if target_type != "Domain":
+        # Extract a plain domain from URL or IP so WHOIS
+        # can still run instead of just refusing.
+        if target_type == "URL":
+            lookup_target = urlparse(target).netloc
+            # strip port if present, e.g. example.com:8080
+            lookup_target = lookup_target.split(":")[0]
 
+        elif target_type == "Domain":
+            lookup_target = target
+
+        else:
             return {
                 "source": "WHOIS",
                 "success": False,
                 "data": None,
                 "error": (
-                    "WHOIS lookup is currently "
-                    "supported for domains only."
+                    "WHOIS lookup is not supported "
+                    "for IP addresses."
                 )
             }
 
-        domain_info = whois.whois(target)
+        domain_info = whois.whois(lookup_target)
 
         if not domain_info:
 
