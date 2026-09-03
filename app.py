@@ -206,10 +206,6 @@ RECOMMENDATION:
 # GEMINI API
 # ==========================================
 
-# ==========================================
-# GEMINI API
-# ==========================================
-
 def call_gemini(prompt):
 
     api_key = os.getenv("GEMINI_API_KEY")
@@ -226,10 +222,14 @@ def call_gemini(prompt):
         api_key=api_key
     )
 
-    # Valid and supported model endpoints
-        # Valid and supported model endpoints (updated Sept 2026)
-    candidate_models = ["gemini-3.6-flash", "gemini-flash-latest", "gemini-2.5-flash"]
-    last_error = None
+    # Valid and supported model endpoints (updated Sept 2026)
+    candidate_models = [
+        "gemini-3.6-flash",
+        "gemini-flash-latest",
+        "gemini-2.5-flash"
+    ]
+
+    all_errors = []
 
     for model_name in candidate_models:
         try:
@@ -244,14 +244,23 @@ def call_gemini(prompt):
                 "error": None
             }
         except Exception as e:
-            last_error = str(e)
+            all_errors.append(
+                f"[{model_name}] {str(e)}"
+            )
             continue
+
+    combined_error = " | ".join(all_errors)
 
     return {
         "success": False,
         "text": None,
-        "error": f"Gemini request failed: {last_error}"
+        "error": (
+            f"Gemini request failed for all models: "
+            f"{combined_error}"
+        )
     }
+
+
 # ==========================================
 # GEMINI JSON PARSER
 # ==========================================
