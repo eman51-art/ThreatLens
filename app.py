@@ -227,7 +227,8 @@ def call_gemini(prompt):
     )
 
     # Valid and supported model endpoints
-    candidate_models = ["gemini-2.5-flash", "gemini-2.0-flash"]
+        # Valid and supported model endpoints (updated Sept 2026)
+    candidate_models = ["gemini-3.6-flash", "gemini-flash-latest", "gemini-2.5-flash"]
     last_error = None
 
     for model_name in candidate_models:
