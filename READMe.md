@@ -43,3 +43,10 @@ ThreatLens/
 ├── sources.py          # Data fetchers (VirusTotal API & WHOIS logic)
 ├── requirements.txt    # Python dependencies
 └── README.md           # Project documentation
+
+
+---
+
+## ⚠️ Disclaimer
+
+**ThreatLens** is an educational and academic project built for threat intelligence analysis. It is **not** a substitute for enterprise-grade security tools, commercial anti-malware software, or professional cybersecurity advice. Always use your own judgment and verify suspicious indicators through multiple security channels before interacting with any link, domain, or IP address.
